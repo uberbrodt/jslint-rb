@@ -1,0 +1,15 @@
+A set of scripts I've used for a couple of years to integrate with VIM.
+Consists of a wrapper written in Python to pass JSLint args and a list of Global
+vars, a shell script that calls the wrapper and passes in the file name (had trouble
+calling the python script directly from VIM, it's on a TODO) and the JSLint cmdline tool.
+
+You'll need to install Rhino for this to work.
+
+TODO:
+
+1.  Cleanup so that it works on systems other then mine
+2.  Make an installer
+3.  Have said installer pull the latest cmdline version of JSLint
+4.  Test with MacVim
+5.  Possibly convert to Ruby? (I spend most of my time doing Ruby dev now, so it would
+        be easier to share this with co-workers)
