@@ -16,16 +16,17 @@ module VimJslintWrapper
     end
 
     def initialize
+      jslint_dir = File.expand_path File.dirname(__FILE__)
       @config = {
         #The JavaScript cmdline program to call
         js_cmd: 'rhino',
         #Location of the jslint.js file
-        lint_location: "/usr/local/lib/jslint.js",
+        lint_location: File.join(jslint_dir,"jslint.js"),
         #regex that will take output from Jslint and reformat it for use
         #with VIM
         pattern: /Lint at line (\d+) character (\d+): (.*)/,
         #tempfile location; make sure it's writable by your user
-        temp_file: '/tmp/jslint_wrap',
+        temp_file: File.join(jslint_dir,'jslint_wrap.tmp'),
         #this is passed to JSLint so that it will not falsely call
         #an undefined error on them
         global_vars: "Ext,console,Compass,currentUser",
