@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require File.expand_path("../lib/jslint-rb.rb", File.dirname(__FILE__))
+
+instance = JslintRb::Runner.new
+instance.execute
