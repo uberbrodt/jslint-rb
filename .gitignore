@@ -1,3 +1,5 @@
 jslint_wrap.tmp
 test.js
 *.swp
+doc/
+*.gem
