@@ -1,3 +1,4 @@
+#Jslint-rb
 Borne out of a set of Python/Bash scripts I had lugged around for several years. Decided
 to turn into an actual program instead of setting it up on yet another machine.
 
