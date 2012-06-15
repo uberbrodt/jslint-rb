@@ -3,12 +3,31 @@ module JslintRb
   #Formatters are used to parse the output from Lint and
   #transform it for use with other programs (or simply to
   #customize the output)
-  module Formatter
-    #This basic regex will grab the line number, the column position,
-    #and the error or warning message from JSLint in that order.
-    LINT_REGEX = /Lint at line (\d+) character (\d+): (.*)/
+  class Formatter
+
+    ##
+    #Formatter for use with VIM's :make command.  Set your errorformat
+    #for JS files to '%f:%l:%c:%m' and it will work flawlessly with
+    #:cope
+    VIM = Proc.new do |errors, filename|
+      results = []
+      errors.each do |error|
+        results << "#{filename}:#{error.line_number}:"\
+        "#{error.character}:#{error.reason} -- #{error.evidence.strip}"
+      end
+      results
+    end
+
+    def initialize(formatter)
+      @command = formatter
+    end
+
+
+    def print(errors, filename)
+      output = @command.call(errors, filename)
+      puts output
+    end
 
   end
 end
 
-require File.expand_path('formatter/vim', File.dirname(__FILE__))
