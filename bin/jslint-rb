@@ -3,5 +3,11 @@
 require 'rubygems'
 require File.expand_path("../lib/jslint-rb.rb", File.dirname(__FILE__))
 
-instance = JslintRb::Runner.new
-instance.execute
+config = JslintRb::OptionParser.new
+
+instance = JslintRb::Runner.new(config.filename, config.options)
+output = instance.execute
+
+result = JslintRb::Formatter::Vim.format(output, config.filename)
+
+puts result
