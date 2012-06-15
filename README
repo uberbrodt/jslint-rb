@@ -1,9 +1,20 @@
-A set of scripts I've used for a couple of years to integrate with VIM.
-Consists of a wrapper written in Python to pass JSLint args and a list of Global
-vars, a shell script that calls the wrapper and passes in the file name (had trouble
-calling the python script directly from VIM, it's on a TODO) and the JSLint cmdline tool.
+Borne out of a set of Python/Bash scripts I had lugged around for several years. Decided
+to turn into an actual program instead of setting it up on yet another machine.
 
-You'll need to install Rhino [http://www.mozilla.org/rhino/] for this to work.
+Features:
+* Converted to ruby for easy portability
+* Using ExecJS, so no dependency on a particular JS runtime
+* You can specify a list of globals at the commandline (config file in the future)
+  instead of having to update your source code files with ugly /*global x,y,z */
+  declarations
+* will also be able to configure multiple formatters easily for use in different environments
+  (VIM, RubyMine, Continuous Integration, etc)
+
+UPDATE June 15th 2012:
+
+Got ExecJS integrated, and enabled the formatting so it will work with VIM.
+Also converted to using JSHint instead of JSLint. General refactoring as well,
+but should be good enough for a general beta release
 
 UPDATE June 6th 2012:
 
@@ -18,9 +29,9 @@ soon.
 
 TODO:
 
-1.  Cleanup so that it works on systems other then mine
-2.  Make an installer
-3.  Have said installer pull the latest cmdline version of JSLint
-4.  Test with MacVim
-5.  Possibly convert to Ruby? (I spend most of my time doing Ruby dev now, so it would
-    be easier to share this with co-workers) <-- In Progress
+1.  Make a task to pull the latest version of JSHint
+2.  Test with MacVim
+3.  Allow the specification of formatters at the command line
+4.  Allow the spec of Globals from the commandline
+5.  Allow configuration via a YAML file in the users home directory, so that you
+    don't have to input the same commandline options each time

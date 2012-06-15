@@ -1,7 +1,9 @@
 Gem::Specification.new do |s|
-  s.name          = 'jsline-rb'
-  s.version       = '0.0.0'
-  s.date          = '2012-06-06'
+  s.name          = 'jslint-rb'
+  s.description   = 'Ruby wrapper for JSHint, using execJS'
+  s.homepage      = 'https://github.com/uberbrodt/jslint-rb'
+  s.version       = '0.1'
+  s.date          = '2012-06-15'
   s.summary       = 'Ruby wrapper to run and format JSLint, using execJS'
   s.authors       = ['Chris Brodt']
   s.email         = 'chris@uberbrodt.net'
