@@ -7,6 +7,7 @@ module JslintRb
       @character = jsobject["character"]
       @reason = jsobject["reason"]
       @evidence = jsobject["evidence"]
+      @evidence.strip! unless @evidence.nil?
     end
 
   end

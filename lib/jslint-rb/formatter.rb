@@ -12,8 +12,10 @@ module JslintRb
     VIM = Proc.new do |errors, filename|
       results = []
       errors.each do |error|
-        results << "#{filename}:#{error.line_number}:"\
-        "#{error.character}:#{error.reason} -- #{error.evidence.strip}"
+        fmt_err = "#{filename}:#{error.line_number}:"\
+          "#{error.character}:#{error.reason}"
+        fmt_err << " | #{error.evidence}" unless error.evidence.nil?
+        results << fmt_err
       end
       results
     end

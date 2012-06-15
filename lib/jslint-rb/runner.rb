@@ -15,10 +15,11 @@ module JslintRb
     end
 
     def execute
-      set_globals
+      #set_globals
       context = ExecJS.compile(File.read(@config[:lint_location]))
-      output = context.exec("JSHINT(#{MultiJson.dump(File.read(@config[:temp_file]))},"\
-                            "#{MultiJson.dump(@config[:lint_options])});"\
+      output = context.exec("JSHINT(#{MultiJson.dump(File.read(@filename))},"\
+                            "#{MultiJson.dump(@config[:lint_options])},"\
+                            "#{MultiJson.dump(@config[:global_vars])});"\
                             "return JSHINT.errors")
       output.compact.map {|x| JslintRb::Error.new(x) }
     end

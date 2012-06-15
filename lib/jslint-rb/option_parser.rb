@@ -27,6 +27,14 @@ module JslintRb
       eqnull: true
     }
 
+    DEFAULT_GLOBALS = {
+      Ext: true,
+      console: true,
+      Compass: true,
+      currentUser: true
+    }
+
+
     def initialize
       @filename = ARGV[0]
 
@@ -37,7 +45,7 @@ module JslintRb
         temp_file: 'jslint_wrap.tmp',
         #this is passed to JSLint so that it will not falsely call
         #an undefined error on them
-        global_vars: "Ext,console,Compass,currentUser",
+        global_vars: {},
         #A hash of JSHINT options
         lint_options: {}
         #default_options: ['white: false', 'nomen: false', 'undef: true']
@@ -57,6 +65,18 @@ module JslintRb
               @options[:lint_options].merge!(DEFAULT_OPT)
             else
               @options[:lint_options][key] = value
+            end
+          end
+        end
+
+        opt.on('-g', "--globals  ['GLOBALVAR' : BOOL]", Array,
+               "array of globals.  Set them to true to allow them to be overridden") do |options|
+          options.each do |global|
+            key,value = global.split(':')
+            if key == 'default'
+              @options[:global_vars].merge!(DEFAULT_GLOBALS)
+            else
+              @options[:global_vars][key] = value
             end
           end
         end
