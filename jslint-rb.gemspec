@@ -9,4 +9,6 @@ Gem::Specification.new do |s|
 
   s.bindir        = 'bin'
   s.executables   = ['jslint-rb']
+  s.add_dependency 'execjs', '1.3.2'
+  s.add_dependency 'multi_json', '1.3.6'
 end

@@ -6,17 +6,12 @@ module JslintRb
     #:cope
     class Vim
 
-      def self.format(text, filename)
+      def self.format(errors, filename)
         results = []
 
-        text.split("\n").each do |line|
-          matches = LINT_REGEX.match(line)
-          if matches
-            line = matches[1]
-            char = matches[2]
-            msg = matches[3]
-            results << "#{filename}:#{line}:#{char}:#{msg}"
-          end
+        errors.each do |error|
+          results << "#{filename}:#{error.line_number}:"\
+          "#{error.character}:#{error.reason} -- #{error.evidence.strip}"
         end
 
         results

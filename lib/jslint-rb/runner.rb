@@ -6,24 +6,29 @@ module JslintRb
 #into a gem, you'll be able to set these by config file
 #or command line options.
   class Runner
+    require 'execjs'
+    require 'multi_json'
 
     def initialize(filename, options)
       @filename = filename
       @config = options
-      @jslint_options = []
-      @jslint_options = @config[:default_options] if @jslint_options.empty?
     end
 
     def execute
-      set_jslint_options
-      output = `#{@config[:js_cmd]} #{@config[:lint_location]} #{@config[:temp_file]}`
-      output
+      set_globals
+      context = ExecJS.compile(File.read(@config[:lint_location]))
+      output = context.exec("JSHINT(#{MultiJson.dump(File.read(@config[:temp_file]))},"\
+                            "#{MultiJson.dump(@config[:lint_options])});"\
+                            "return JSHINT.errors")
+      output.compact.map {|x| JslintRb::Error.new(x) }
     end
 
-    def set_jslint_options
+    ##
+    #This prepends a list of globals to the file you're working on.
+    #Saves it off to the location defined by @config[:temp_file]
+    def set_globals
       f = File.open(@filename, 'r')
-      options = @jslint_options.join(" ") unless @jslint_options.nil?
-      contents = "/*jslint #{options} */ /*global #{@config[:global_vars]} */ #{f.read}"
+      contents = "/*global #{@config[:global_vars]} */ #{f.read}"
       f.close
 
       tmp_file_handle = File.open(@config[:temp_file], "w")
