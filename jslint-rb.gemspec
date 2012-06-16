@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.date          = '2012-06-15'
   s.authors       = ['Chris Brodt']
   s.email         = 'chris@uberbrodt.net'
-  s.files         = Dir["{bin,lib}/**/*"] + ["README", 'GPL-3-LICENSE']
+  s.files         = Dir["{bin,lib}/**/*"] + ["README.md", 'GPL-3-LICENSE']
 
   s.bindir        = 'bin'
   s.executables   = ['jslint-rb']
