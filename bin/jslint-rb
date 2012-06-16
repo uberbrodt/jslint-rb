@@ -8,6 +8,6 @@ config = JslintRb::OptionParser.new
 instance = JslintRb::Runner.new(config.filename, config.options)
 output = instance.execute
 
-formatter = JslintRb::Formatter.new(JslintRb::Formatter::VIM)
+formatter = JslintRb::Formatter.new(config.options[:formatter_proc])
 
 formatter.print(output, config.filename)

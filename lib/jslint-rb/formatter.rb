@@ -21,6 +21,9 @@ module JslintRb
     end
 
     def initialize(formatter)
+      if formatter.nil?
+        puts 'Please enter a formatter class'
+      end
       @command = formatter
     end
 

@@ -5,6 +5,7 @@ module JslintRb
   #see a list of valid command line opts
   class OptionParser
     require 'optparse'
+    require 'yaml'
 
     attr_reader :options
     attr_reader :filename
@@ -47,9 +48,52 @@ module JslintRb
         #an undefined error on them
         global_vars: {},
         #A hash of JSHINT options
-        lint_options: {}
-        #default_options: ['white: false', 'nomen: false', 'undef: true']
+        lint_options: {},
+        #Formatter proc to use
+        formatter_proc: nil
       }
+
+      parse_config_file
+      parse_cmdline_args
+    end
+
+    def load_globals globals
+      globals.each do |global|
+        key,value = global.split(':')
+        if key == 'default'
+          @options[:global_vars].merge!(DEFAULT_GLOBALS)
+        else
+          @options[:global_vars][key] = value
+        end
+      end
+    end
+
+    def load_lint_configs options
+      options.each do |lint_opt|
+        key,value = lint_opt.split(':')
+        if key == 'default'
+          @options[:lint_options].merge!(DEFAULT_OPT)
+        else
+          @options[:lint_options][key] = value
+        end
+      end
+    end
+
+    def get_formatter_constant constant
+      @options[:formatter_proc] = eval('JslintRb::Formatter::'<< constant)
+    end
+
+    def parse_config_file
+      config_file = File.read(File.join(ENV['HOME'],'.jslint-rb')) rescue nil
+      return if config_file.nil?
+      config = YAML::load(config_file)
+      return if config == false
+      load_globals config['global_vars'] unless config['global_vars'].nil?
+      load_lint_configs config['lint_options'] unless config['lint_options'].nil?
+      get_formatter_constant config['formatter_proc'] unless config['formatter_proc'].nil?
+    end
+
+    def parse_cmdline_args
 
       ARGV.options do |opt|
         opt.banner = "Usage: jslint-rb [FILENAME] [OPTIONS]"
@@ -58,27 +102,19 @@ module JslintRb
                "List of JsHint options. "\
                "Passing default : true will "\
                "enable default options") do |options|
-
-          options.each do |lint_opt|
-            key,value = lint_opt.split(':')
-            if key == 'default'
-              @options[:lint_options].merge!(DEFAULT_OPT)
-            else
-              @options[:lint_options][key] = value
-            end
-          end
+          load_lint_configs options
         end
 
         opt.on('-g', "--globals  ['GLOBALVAR' : BOOL]", Array,
                "array of globals.  Set them to true to allow them to be overridden") do |options|
-          options.each do |global|
-            key,value = global.split(':')
-            if key == 'default'
-              @options[:global_vars].merge!(DEFAULT_GLOBALS)
-            else
-              @options[:global_vars][key] = value
-            end
-          end
+          load_globals options
+        end
+
+        opt.on('-f', "--format FORMAT", String,
+               "The string constant for the Formatter proc:
+                                      VIM -- format for VIM make errorformat"
+              ) do |option|
+          get_formatter_constant option
         end
 
         opt.on_tail("-h", "--help", 'Show this message') do
@@ -87,7 +123,6 @@ module JslintRb
         end
         opt.parse!
       end
-
     end
 
   end
