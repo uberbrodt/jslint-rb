@@ -11,28 +11,30 @@ to turn into an actual program instead of setting it up on yet another machine.
 * will also be able to configure multiple formatters easily for use in different environments
   (VIM, RubyMine, Continuous Integration, etc)
 
-####UPDATE June 15th 2012:
+###Examples:
 
-Got ExecJS integrated, and enabled the formatting so it will work with VIM.
-Also converted to using JSHint instead of JSLint. General refactoring as well,
-but should be good enough for a general beta release
+Install the gem and a js runtime
+```bash
+gem install jslint-rb
+gem install therubyracer
+```
 
-####UPDATE June 6th 2012:
+Setup a config file in your $HOME directory, named .jslint-rb.  Then put the following in there
 
-Created a ruby version of this script.  Can be used like this:
+```yaml
+global_vars:
+ - default:true
+formatter_proc: VIM
+lint_options:
+ - default:true
+```
+You should be all set to start linting your Javascript!  Output will be to STDOUT
 
-jslint foo.js [OPTIONS]
-
-requires ruby 1.9.x
-
-This version is missing the pretty formatting for use with VIM/Emacs, but that should be added
-soon.
+```bash
+jslint-rb foo.js
+```
 
 ####TODO:
 
 1.  Make a task to pull the latest version of JSHint
-2.  Test with MacVim
-3.  Allow the specification of formatters at the command line
-4.  Allow the spec of Globals from the commandline
-5.  Allow configuration via a YAML file in the users home directory, so that you
-    don't have to input the same commandline options each time
+2.  Test with MacVim and Windows
