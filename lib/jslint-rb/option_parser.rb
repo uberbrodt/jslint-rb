@@ -7,11 +7,16 @@ module JslintRb
     require 'optparse'
     require 'yaml'
 
+    ##
+    #The options for JSHint and global vars to exclude from
+    #undef error reports
     attr_reader :options
+    ##
+    #The file that we are executing JSHint against
     attr_reader :filename
 
     ##
-    #These are just some defaults that I wanted.
+    #These are just some JSHINT defaults that I wanted.
     #Part of the fun in writing software is imposing your
     #opinions on people.
     DEFAULT_OPT =
@@ -28,6 +33,10 @@ module JslintRb
       eqnull: true
     }
 
+    ##
+    #The default globals are tailored for some of my projects
+    #and ExtJS.  Should probably turn this into something more
+    #generic
     DEFAULT_GLOBALS = {
       Ext: true,
       console: true,
@@ -42,8 +51,6 @@ module JslintRb
       @options = {
         #Location of the jslint.js file
         lint_location: File.expand_path("js/jshint.js", File.dirname(__FILE__)),
-        #tempfile location; make sure it's writable by your user
-        temp_file: 'jslint_wrap.tmp',
         #this is passed to JSLint so that it will not falsely call
         #an undefined error on them
         global_vars: {},
@@ -56,6 +63,8 @@ module JslintRb
       parse_config_file
       parse_cmdline_args
     end
+
+    private
 
     def load_globals globals
       globals.each do |global|
@@ -93,12 +102,15 @@ module JslintRb
       get_formatter_constant config['formatter_proc'] unless config['formatter_proc'].nil?
     end
 
+    ##
+    #Uses optparse to turn the cmdline arguments into
+    #config objects
     def parse_cmdline_args
 
       ARGV.options do |opt|
         opt.banner = "Usage: jslint-rb [FILENAME] [OPTIONS]"
 
-        opt.on('-o', "--options ['OPTIONNAME : VALUE',]", Array,
+        opt.on('-o', "--options ['OPTIONNAME : VALUE']", Array,
                "List of JsHint options. "\
                "Passing default : true will "\
                "enable default options") do |options|
@@ -111,8 +123,9 @@ module JslintRb
         end
 
         opt.on('-f', "--format FORMAT", String,
-               "The string constant for the Formatter proc:
-                                      VIM -- format for VIM make errorformat"
+               "The string constant for the Formatter proc
+                                       Options:
+                                         VIM -- format for VIM make errorformat"
               ) do |option|
           get_formatter_constant option
         end
