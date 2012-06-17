@@ -97,9 +97,17 @@ module JslintRb
       return if config_file.nil?
       config = YAML::load(config_file)
       return if config == false
-      load_globals config['global_vars'] unless config['global_vars'].nil?
-      load_lint_configs config['lint_options'] unless config['lint_options'].nil?
-      get_formatter_constant config['formatter_proc'] unless config['formatter_proc'].nil?
+
+      config.each do |key, val|
+        if key == 'global_vars'
+          load_globals val
+        elsif key == 'lint_options'
+          load_lint_configs val
+        elsif key == 'formatter_proc'
+          get_formatter_constant val
+        end
+      end
+
     end
 
     ##
