@@ -38,11 +38,10 @@ module JslintRb
       results
     end
 
+    ##
+    #Uses MULTI_LINE as a default
     def initialize(formatter)
-      if formatter.nil?
-        puts 'Please enter a formatter class'
-        exit;
-      end
+      formatter = JslintRb::Formatter::MULTI_LINE if formatter.nil?
       @command = formatter
     end
 
